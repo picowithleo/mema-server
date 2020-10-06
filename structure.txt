@@ -1,0 +1,18 @@
+---------
+|-- src
+|   |-- index.js        入口文件，server监听， 初始化
+|   |-- route.js        server的主要接口， /posts， /users
+|   |-- middleware      中间件， （检查id，加header，error handling）
+|   |-- routes          主接口下的小路径
+|       |-- posts.js        GET /, PUT /:id
+|       |-- users.js
+|   |-- controllers     逻辑处理
+|       |-- posts.js    所有对应posts的逻辑处理
+|   |-- models          数据模型， 一般对应数据库、
+|       |-- posts       我们这里是一个array
+|   |-- utils           helper function
+|
+|-- package.json
+|-- package-lock.json
+|-- readme
+|-- license, environment, configuration....
