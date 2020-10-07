@@ -6,15 +6,28 @@ const helmet = require("helmet");
 // const { NativeError } = require("mongoose");
 const app = express();
 const routes = require("./routes");
+const { connectToDB } = require('./utils/db')
 
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(morgan("common"));
 
-app.use("/v1", routes);
+app.use("/api", routes);
+
+
+connectToDB()
+.then(() => {
+        app.listen(3000, () => {
+            console.log("server listening");
+        });
+    })
+    .catch(e => { 
+        console.error(e);
+        process.exit(1);
+    });
  
 // http://    www.example.com  /people  /1              ?name=pico
 // protocol   domain            path    route params    query params
@@ -95,6 +108,6 @@ app.use("/v1", routes);
 // });
 
 
-app.listen(PORT, () => {
-    console.log(`listening on ${PORT}`);
-});
+// app.listen(PORT, () => {
+//     console.log(`listening on ${PORT}`);
+// });
