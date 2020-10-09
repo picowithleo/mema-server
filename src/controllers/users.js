@@ -3,16 +3,26 @@
 const User = require('../models/user');
 
 async function addUser(req, res) {
+    const { 
+        email,
+        password,
+        username,
+        country,
+        language,
+        proficiencyLevel,
+        avatar
+    } = req.body;
     const user = new User({
-        email: "1233@test.com",
-        password: "123abc",
-        username: "banana",
-        country: "Australia",
-        language: "English",
-        proficiencyLevel: "Level 1",
-        avatar: "man.png"
-    })
-    await user.save();
+        email,
+        password,
+        username,
+        country,
+        language,
+        proficiencyLevel,
+        avatar
+    });
+   
+    await user.save(); 
     return res.json(user);
 }
 
@@ -20,7 +30,7 @@ async function getUser(req, res) {
   const { id } = req.params;
   const user = await User.findById(id);
   if (!user) {
-      return res.status(404).send();
+      return res.sendStatus(404);
   }
   return res.json(user);
 }
@@ -42,7 +52,8 @@ async function updateUser(req, res) {
         proficiencyLevel,
         avatar
     } = req.body;
-    const user = await User.findByIdAndUpdate(
+
+    const newUser = await User.findByIdAndUpdate(
         id, 
         {
             email,
@@ -57,20 +68,35 @@ async function updateUser(req, res) {
             new: true
         }
         );
-    if (!user) {
-        return res.status(404).send();
+    if (!newUser) {
+        return res.sendStatus(404);
     }
-    return res.json(user);
+    return res.json(newUser);
 }
 
 async function deleteUser(req, res) {
     const { id } = req.params;
-    const user = await User.findByIdAndDelete(id);
-    if (!user) {
-        return res.status(404).send();
+    const deletedUser = await User.findByIdAndDelete(id);
+    if (!deletedUser) {
+        return res.sendStatus(404);
     }
-    return res.json();
+    return res.sendStatus(200);
 }
+
+// async function addAuth(req, res) {
+//     // 1. get id
+//     const { id, userId } = req.params;
+//     // get document
+//     const auth = await Auth.findById(userId);
+//     const user = await User.findById(id);
+//     if (!Auth || !user) {
+//         return res.status(404).json("user not found");
+//     }
+//     // return success
+//     user.authority.addToSet(auth.id);
+//     await user.save();
+//     return res.json(user);
+// }
 
 module.exports = {
     addUser,
@@ -78,4 +104,6 @@ module.exports = {
     getUser,
     updateUser,
     deleteUser
+    // ,
+    // addAuth
 };

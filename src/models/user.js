@@ -1,14 +1,24 @@
 const mongoose = require('mongoose');
+const Joi = require('@hapi/joi');
 
 const schema = new mongoose.Schema(
     {
         email: {
             type: String,
-            required: true
+            required: true,
+            validate: {
+                validator: email => 
+                    !Joi.string()
+                        .email().
+                        validate(email).error,
+                msg: 'Invalid email format'
+            }
         },
         password: {
             type: String,
-            required: true
+            required: true,
+            minlength: 6,
+            maxlength: 16
         },
         username: {
             type: String,
@@ -30,6 +40,10 @@ const schema = new mongoose.Schema(
             type: String,
             required: true
         },
+        // auth: {
+        //     tpye: mongoose.Schema.Types.ObjectId,
+        //     ref: "Auth"
+        // },
         //hide __v
         __v: {
             type: Number,

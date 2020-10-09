@@ -1,13 +1,17 @@
 
 
 const express = require("express");
-const postsRoute = require("./routes/posts");
 const router = express.Router();
 
+const postsRoute = require("./routes/posts");
 const userRoute = require("./routes/users.js");
+const authsRoute = require("./routes/auths.js");
+const authRoute = require("./routes/auth.js");
+const authGuard = require("./middleware/authGuard");
 
-router.use("/users", userRoute);
-
-router.use("/posts", postsRoute);
+router.use("/users", authGuard, userRoute);
+router.use("/posts", authGuard, postsRoute);
+router.use("/auths", authsRoute);
+router.use("/auth", authRoute);
 
 module.exports = router;

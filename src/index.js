@@ -1,5 +1,8 @@
 require("dotenv").config();
+require("express-async-errors");
 const express = require("express");
+
+
 const morgan = require("morgan");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -7,26 +10,30 @@ const helmet = require("helmet");
 const app = express();
 const routes = require("./routes");
 const { connectToDB } = require('./utils/db')
+const errorHandler = require("./middleware/errorHandler");
 
-// const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
+const morganLog =
+  process.env.NODE_ENV === 'production' ? morgan('common') : morgan('dev');
 
 app.use(helmet());
+app.use(morganLog);
 app.use(cors());
 app.use(express.json());
 app.use(morgan("common"));
 
 app.use("/api", routes);
+app.use(errorHandler);
 
 
-connectToDB()
-.then(() => {
-        app.listen(3000, () => {
-            console.log("server listening");
+connectToDB().then(() => {
+        app.listen(PORT, () => {
+            console.log(`Server is listening on PORT: ${PORT}`);
         });
-    })
-    .catch(e => { 
-        console.error(e);
-        process.exit(1);
+    // })
+    // .catch(e => { 
+    //     console.error(e);
+    //     process.exit(1);
     });
  
 // http://    www.example.com  /people  /1              ?name=pico
