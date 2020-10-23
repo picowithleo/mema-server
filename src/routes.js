@@ -9,7 +9,7 @@ const authsRoute = require("./routes/auths.js");
 const authRoute = require("./routes/auth.js");
 const authGuard = require("./middleware/authGuard");
 
-router.use("/users", authGuard, userRoute);
+router.use("/users", userRoute);
 router.use("/posts", authGuard, postsRoute);
 router.use("/auths", authsRoute);
 router.use("/auth", authRoute);

@@ -1,38 +1,39 @@
 
 
 const User = require('../models/user');
+const { generateToken } = require('../utils/jwt');
 
-async function addUser(req, res) {
-    const { 
-        email,
-        password,
-        username,
-        country,
-        language,
-        proficiencyLevel,
-        avatar
-    } = req.body;
-    const user = new User({
-        email,
-        password,
-        username,
-        country,
-        language,
-        proficiencyLevel,
-        avatar
-    });
+// async function addUser(req, res) {
+//     const { 
+//         email,
+//         password,
+//         username,
+//         country,
+//         language,
+//         proficiencyLevel,
+//         avatar
+//     } = req.body;
+//     const user = new User({
+//         email,
+//         password,
+//         username,
+//         country,
+//         language,
+//         proficiencyLevel,
+//         avatar
+//     });
    
-    await user.save(); 
-    return res.json(user);
-}
+//     await user.save(); 
+//     return res.json({ user });
+// }
 
 async function getUser(req, res) {
-  const { id } = req.params;
-  const user = await User.findById(id);
+  const { email } = req.body;
+  const user = await User.find({email:email}, {username: 1, _id: 0});
   if (!user) {
       return res.sendStatus(404);
   }
-  return res.json(user);
+  res.json(user);
 }
 
 async function getAllUsers(req, res) {
@@ -42,7 +43,6 @@ async function getAllUsers(req, res) {
 }
 
 async function updateUser(req, res) {
-    const { id } = req.params;
     const { 
         email,
         password,
@@ -53,26 +53,27 @@ async function updateUser(req, res) {
         avatar
     } = req.body;
 
-    const newUser = await User.findByIdAndUpdate(
-        id, 
-        {
-            email,
-            password,
-            username,
-            country,
-            language,
-            proficiencyLevel,
-            avatar
-        }, 
-        {
-            new: true
-        }
+    const newUser = await User.update(
+            {email:email, password:password}, 
+            {
+                email,
+                password,
+                username,
+                country,
+                language,
+                proficiencyLevel,
+                avatar
+            }, 
+            {
+                upsert:true
+            }
         );
-    if (!newUser) {
-        return res.sendStatus(404);
+        if (!newUser) {
+            return res.sendStatus(404);
+        }
+        return res.json(newUser);
     }
-    return res.json(newUser);
-}
+
 
 async function deleteUser(req, res) {
     const { id } = req.params;
@@ -99,7 +100,7 @@ async function deleteUser(req, res) {
 // }
 
 module.exports = {
-    addUser,
+    // addUser,
     getAllUsers,
     getUser,
     updateUser,

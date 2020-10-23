@@ -10,13 +10,13 @@ const {
     // addAuth
 } = require('../controllers/users');
 
-router.get("", getAllUsers);
+router.get("", getUser);
 
 router.get("/:id", getUser);
 
-router.post("", addUser);
+router.post("", updateUser);
 
-router.put("/:id", updateUser);
+router.put("", updateUser);
 
 router.delete("/:id", deleteUser);
 

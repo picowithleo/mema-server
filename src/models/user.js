@@ -49,10 +49,7 @@ const schema = new mongoose.Schema(
             type: Number,
             select: false
         }
-}, 
-    {
-        timestamps: true,
-    }
+}
 );
 
  
